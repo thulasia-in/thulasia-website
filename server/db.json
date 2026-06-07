@@ -1,0 +1,235 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Poondu Podi (Garlic Podi)",
+      "tagline": "Authentic Tamil Nadu Recipe",
+      "price": 120,
+      "weight": "100g",
+      "category": "Podi",
+      "description": "Authentic Erode style Poondu Podi made with handpicked organic garlic, premium Guntur red chillies, and split urad dal. Traditionally dry-roasted over low fire for a rich aroma. No artificial colors, preservatives, or MSG.",
+      "ingredients": "Garlic, Red Chilli, Urad Dal, Cumin, Asafoetida, Salt",
+      "rating": 4.9,
+      "reviews": 124,
+      "directions": "Mix 1-2 tbsp with hot rice and ghee or sesame oil, or serve as a delicious side accompaniment for soft idlis, crispy dosas, and uttapams.",
+      "nutrition": {
+        "Energy": "432 kcal",
+        "Protein": "16.5g",
+        "Carbohydrates": "59.8g",
+        "Total Sugars": "2.1g",
+        "Total Fat": "15.2g",
+        "Saturated Fat": "2.6g",
+        "Dietary Fibre": "8.6g",
+        "Sodium": "620mg"
+      },
+      "fssai": "22424573000315",
+      "inStock": true,
+      "imageType": "garlic",
+      "imageUrl": "/uploads/1780421938745-15301755.png"
+    },
+    {
+      "id": 2,
+      "name": "Karuveppilai Podi (Curry Leaf Podi)",
+      "tagline": "Iron-Rich Daily Health Mix",
+      "price": 110,
+      "weight": "100g",
+      "category": "Podi",
+      "description": "A traditional healthy spice mix made from fresh organic curry leaves, black pepper, and split lentils. High in iron, fiber, and antioxidants. Helps promote digestion and hair health.",
+      "ingredients": "Organic Curry Leaves, Black Pepper, Urad Dal, Bengal Gram, Cumin, Salt",
+      "rating": 4.8,
+      "reviews": 86,
+      "directions": "Best enjoyed with warm sesame (gingelly) oil and hot idlis, or mixed with hot steamed rice and ghee.",
+      "nutrition": {
+        "Energy": "385 kcal",
+        "Protein": "12.4g",
+        "Carbohydrates": "52.3g",
+        "Total Sugars": "1.8g",
+        "Total Fat": "8.6g",
+        "Saturated Fat": "1.2g",
+        "Dietary Fibre": "11.2g",
+        "Sodium": "590mg"
+      },
+      "fssai": "22424573000315",
+      "inStock": true,
+      "imageType": "curry"
+    },
+    {
+      "id": 3,
+      "name": "Idli Milagai Podi (Gunpowder Masala)",
+      "tagline": "Coarse & Spicy Gunpowder",
+      "price": 115,
+      "weight": "100g",
+      "category": "Podi",
+      "description": "Coarsely ground traditional spicy gunpowder. Uses premium dry red chillies and toasted sesame seeds to deliver an authentic heat and crunch that pairs beautifully with hot fluffy idlis.",
+      "ingredients": "Premium Red Chilli, Urad Dal, Sesame Seeds, Bengal Gram, Asafoetida, Salt",
+      "rating": 4.7,
+      "reviews": 98,
+      "directions": "Mix with hot ghee or cold-pressed sesame oil. Smear generously on idlis or dosas for a flavorful coating.",
+      "nutrition": {
+        "Energy": "410 kcal",
+        "Protein": "14.2g",
+        "Carbohydrates": "56.4g",
+        "Total Sugars": "2.0g",
+        "Total Fat": "12.1g",
+        "Saturated Fat": "1.9g",
+        "Dietary Fibre": "9.3g",
+        "Sodium": "610mg"
+      },
+      "fssai": "22424573000315",
+      "inStock": true,
+      "imageType": "gunpowder"
+    },
+    {
+      "id": 1780453485640,
+      "name": "sambar ",
+      "tagline": "wdbfewfbewb",
+      "price": 120,
+      "weight": "100g",
+      "category": "Masala",
+      "description": "vqevewbewrberb",
+      "ingredients": "",
+      "directions": "",
+      "nutrition": {
+        "Energy": "410 kcal",
+        "Protein": "14.0g",
+        "Carbohydrates": "58.0g",
+        "Total Sugars": "2.0g",
+        "Total Fat": "12.0g",
+        "Saturated Fat": "1.8g",
+        "Dietary Fibre": "9.0g",
+        "Sodium": "600mg"
+      },
+      "fssai": "22424573000315",
+      "inStock": true,
+      "imageUrl": null,
+      "imageType": "garlic"
+    }
+  ],
+  "orders": [],
+  "recipes": [
+    {
+      "id": 1,
+      "title": "Poondu Podi Ghee Rice",
+      "desc": "The ultimate South Indian comfort food. Simple, quick, and bursting with fresh garlic aroma.",
+      "prepTime": "5 mins",
+      "cookTime": "5 mins",
+      "serves": "1-2",
+      "difficulty": "Easy",
+      "productUsed": "Poondu Podi (Garlic Podi)",
+      "ingredients": [
+        "2 cups Cooked Steaming Hot Rice",
+        "2-3 tablespoons Thulasia Poondu Podi",
+        "2 tablespoons Cow Ghee (or Gingelly Oil)",
+        "A sprig of Fresh Curry Leaves",
+        "Roasted Cashew Nuts (optional)"
+      ],
+      "steps": [
+        "Ensure your cooked rice is steaming hot and individual grains are separate.",
+        "Transfer hot rice to a wide mixing bowl.",
+        "Add 2 tablespoons of warm cow ghee (or raw sesame oil) over the rice.",
+        "Sprinkle Thulasia Poondu Podi evenly over the ghee and rice.",
+        "Gently fold and mix using a wooden spatula so the spice mix coats every grain without mashing the rice.",
+        "Garnish with ghee-fried curry leaves and cashews. Serve warm with papad or potato fry."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Crispy Gunpowder Podi Idli",
+      "desc": "Tavern-style mini idlis coated in toasted gunpowder and cold-pressed gingelly oil.",
+      "prepTime": "10 mins",
+      "cookTime": "8 mins",
+      "serves": "2-3",
+      "difficulty": "Easy",
+      "productUsed": "Idli Milagai Podi",
+      "ingredients": [
+        "15 Mini Idlis (or 4 regular idlis cut into cubes)",
+        "3 tablespoons Thulasia Idli Milagai Podi",
+        "3 tablespoons Gingelly (Sesame) Oil",
+        "1/2 teaspoon Mustard Seeds",
+        "1/2 teaspoon Urad Dal",
+        "1 sprig Curry Leaves"
+      ],
+      "steps": [
+        "Steam the idlis and let them cool down slightly so they don't break when tossed.",
+        "Heat gingelly oil in a pan. Add mustard seeds and let them splutter.",
+        "Add urad dal and fry till it turns golden brown. Toss in the curry leaves.",
+        "Turn the flame to low. Add the mini idlis and saute for 2 minutes till they get a light outer crust.",
+        "Sprinkle Thulasia Idli Milagai Podi (Gunpowder) over the idlis.",
+        "Toss gently on low heat for 1 minute until the podi forms a nice crispy coat. Serve hot with coconut chutney."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Traditional Erode Murungakkai Sambar",
+      "desc": "An aromatic lentil stew cooked with drumsticks and small onions, using our native spice blend.",
+      "prepTime": "15 mins",
+      "cookTime": "20 mins",
+      "serves": "4",
+      "difficulty": "Medium",
+      "productUsed": "Chettinad Sambar Masala",
+      "ingredients": [
+        "1/2 cup Toor Dal (boiled and mashed)",
+        "1 Drumstick (cut into 2-inch pieces)",
+        "10 Pearl Onions (shallots, peeled)",
+        "1 Tomato (chopped)",
+        "Small gooseberry-sized Tamarind (soaked in warm water)",
+        "2-3 tablespoons Thulasia Sambar Masala",
+        "Salt to taste",
+        "For tempering: 1 tsp oil, 1/2 tsp mustard seeds, 1/4 tsp fenugreek, 1 red chilli, asafoetida"
+      ],
+      "steps": [
+        "Extract tamarind juice from the soaked tamarind and set aside.",
+        "In a pot, boil drumstick, shallots, and tomato in tamarind juice with salt and a pinch of turmeric until vegetables are soft.",
+        "Add the mashed toor dal to the boiling vegetable broth.",
+        "Stir in 2-3 tablespoons of Thulasia Sambar Masala. Add water to adjust consistency.",
+        "Simmer on medium flame for 5-7 minutes until the raw masala aroma disappears and the sambar thickens.",
+        "In a separate small pan, heat oil, add tempering ingredients, and pour it into the hot sambar. Cover immediately to lock in the aroma. Serve with hot rice or idli."
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Iron-Rich Curry Leaf Rice",
+      "desc": "A healthy, herbaceous lunchbox rice packed with the goodness of roasted curry leaves.",
+      "prepTime": "5 mins",
+      "cookTime": "10 mins",
+      "serves": "2",
+      "difficulty": "Easy",
+      "productUsed": "Karuveppilai Podi",
+      "ingredients": [
+        "2 cups Cooked Basmati or Ponni Rice (cooled)",
+        "3 tablespoons Thulasia Karuveppilai Podi",
+        "1.5 tablespoons Gingelly Oil",
+        "1 tablespoon Roasted Peanuts",
+        "1/2 tsp Mustard Seeds",
+        "1 Red Chilli"
+      ],
+      "steps": [
+        "Ensure the cooked rice is cool to prevent clumping.",
+        "Heat gingelly oil in a pan, splutter mustard seeds and red chilli.",
+        "Add roasted peanuts and saute for 1 minute until crunchy.",
+        "Turn off the heat. Add the cooled rice to the pan.",
+        "Sprinkle Thulasia Karuveppilai Podi over the rice.",
+        "Gently mix the rice until the green spice mix is evenly distributed. Pack for lunch or serve with potato chips."
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "id": 2,
+      "code": "THULASIA20",
+      "discount": 20,
+      "description": "Special 20% discount on order totals!",
+      "active": true
+    }
+  ],
+  "settings": {
+    "shippingFee": 30,
+    "freeDeliveryEnabled": false,
+    "freeDeliveryThreshold": 498,
+    "address": "84, Pallakatuputhur, Nanjaiuthukuli,\nModakurichy Block, Erode,\nTamil Nadu - 638104, India",
+    "phone": "+91 7373662697",
+    "email": "thulasia.in@gmail.com",
+    "fssai": "License No: 22424573000315\nCategory: Registration [Tamil Nadu]",
+    "fssaiNumber": "22424573000315"
+  }
+}

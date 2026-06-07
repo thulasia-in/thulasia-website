@@ -1,0 +1,15 @@
+{
+  "name": "thulasia-foods",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix buyer\" \"npm run dev --prefix seller\" \"npm run dev --prefix server\"",
+    "build:buyer": "npm run build --prefix buyer",
+    "build:seller": "npm run build --prefix seller",
+    "build": "npm run build:buyer && npm run build:seller",
+    "install:all": "npm install && npm install --prefix buyer && npm install --prefix seller && npm install --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
