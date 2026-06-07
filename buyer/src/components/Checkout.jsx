@@ -104,9 +104,21 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
   // Simulate local mock payment (fallback when no Razorpay credentials)
   const runMockPayment = () => {
     setIsProcessing(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsProcessing(false);
       const order = buildOrderObject();
+      
+      // Save order to backend immediately
+      try {
+        await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(order)
+        });
+      } catch (err) {
+        console.error('Failed to save mock order:', err);
+      }
+
       setCreatedOrder(order);
       setPaymentStep('success');
     }, 2000);
@@ -202,6 +214,18 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                 razorpayId: response.razorpay_payment_id,
                 referenceNo: response.razorpay_order_id
               });
+              
+              // Save order to backend immediately
+              try {
+                await fetch('/api/orders', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(order)
+                });
+              } catch (err) {
+                console.error('Failed to save verified order:', err);
+              }
+
               setCreatedOrder(order);
               setPaymentStep('success');
             } else {
@@ -212,6 +236,18 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
             console.error('Verification error:', err);
             // On verification network error, still show success to avoid blocking user
             const order = buildOrderObject({ razorpayId: response.razorpay_payment_id });
+            
+            // Save order to backend immediately
+            try {
+              await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(order)
+              });
+            } catch (err) {
+              console.error('Failed to save order on verification error:', err);
+            }
+
             setCreatedOrder(order);
             setPaymentStep('success');
           } finally {

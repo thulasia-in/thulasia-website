@@ -424,9 +424,19 @@ app.get('/api/orders', (req, res) => {
 // 8. Log a completed order
 app.post('/api/orders', (req, res) => {
   const db = readDB();
+  const orderId = req.body.orderId;
+
+  if (orderId) {
+    const existingOrder = db.orders.find(o => o.orderId === orderId);
+    if (existingOrder) {
+      console.log(`Order ${orderId} already exists. Returning existing order.`);
+      return res.json(existingOrder);
+    }
+  }
+
   const newOrder = {
     ...req.body,
-    orderId: req.body.orderId || `ORD-${Date.now().toString().slice(-6)}`,
+    orderId: orderId || `ORD-${Date.now().toString().slice(-6)}`,
     date: req.body.date || new Date().toLocaleDateString('en-GB'),
     time: req.body.time || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
     status: req.body.status || 'Pending'
