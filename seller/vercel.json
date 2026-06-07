@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://YOUR-BACKEND-API-URL.onrender.com/api/:path*"
+      "destination": "https://thulasia-website-2.onrender.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://YOUR-BACKEND-API-URL.onrender.com/uploads/:path*"
+      "destination": "https://thulasia-website-2.onrender.com/uploads/:path*"
     },
     {
       "source": "/(.*)",
