@@ -170,7 +170,7 @@ export default function Hero({ setCurrentView, addToCart, products }) {
                 boxShadow: 'var(--shadow-lg)'
               }}>
                 <img 
-                  src="/pouch.png" 
+                  src="/pouch.webp" 
                   alt="Thulasia Poondu Podi Pouch" 
                   style={{
                     width: '100%',

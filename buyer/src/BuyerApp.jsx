@@ -20,6 +20,150 @@ export default function BuyerApp() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Hash-based client router for SEO crawler support
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash || '#/';
+      let view = hash.replace('#', '');
+      if (view.startsWith('/')) {
+        view = view.substring(1);
+      }
+      view = view || 'home';
+      const validViews = ['home', 'store', 'recipes', 'track', 'contact', 'checkout'];
+      if (validViews.includes(view)) {
+        setCurrentView(view);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Update hash when currentView state changes programmatically
+  useEffect(() => {
+    const hashView = currentView === 'home' ? '/' : `/${currentView}`;
+    if (window.location.hash !== `#${hashView}`) {
+      window.location.hash = hashView;
+    }
+  }, [currentView]);
+
+  // Dynamic Metadata, Document Title, and JSON-LD Schema Updates for SEO
+  useEffect(() => {
+    let title = "Thulasia Foods | Traditional Taste, Modern Convenience";
+    let description = "Discover the authentic taste of Erode, Tamil Nadu with our premium 100% natural podis and spice blends. Hygienically processed and traditionally roasted.";
+    let schema = null;
+    
+    switch (currentView) {
+      case 'store':
+        title = "Buy Authentic Tamil Nadu Style Podis Online | Thulasia Foods";
+        description = "Buy fresh, homemade South Indian podis, masalas, and chutney powders online. Pan-roasted in Erode, Tamil Nadu with zero preservatives.";
+        schema = {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "Thulasia Foods Spice Podis",
+          "description": "Premium organic homemade South Indian podis and spice mixes.",
+          "url": "https://thulasia.in/#/store",
+          "itemListElement": products.map((prod, idx) => ({
+            "@type": "ListItem",
+            "position": idx + 1,
+            "url": `https://thulasia.in/#/store`,
+            "name": prod.name,
+            "image": prod.imageUrl || "https://thulasia.in/pouch.webp",
+            "description": prod.description,
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "INR",
+              "price": prod.price,
+              "availability": prod.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+            }
+          }))
+        };
+        break;
+      case 'recipes':
+        title = "Traditional South Indian Recipe Hub | Thulasia Foods Recipes";
+        description = "Learn how to prepare authentic Kongunadu dishes, podi ghee rice, and mini idli gunpowders using our traditional spices.";
+        schema = {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "Traditional South Indian Recipes",
+          "description": "Step-by-step recipes for delicious South Indian dishes using Thulasia spice blends.",
+          "url": "https://thulasia.in/#/recipes"
+        };
+        break;
+      case 'track':
+        title = "Live Order Sourcing & Tracking | Thulasia Foods";
+        description = "Track your Thulasia Foods order's roasting, packing, and courier delivery status in real-time.";
+        break;
+      case 'contact':
+        title = "Contact Thulasia Foods | Erode Spice Manufacturing Unit";
+        description = "Reach out for wholesale or custom spice mixes. Find our premises address, contact numbers, and support email here.";
+        schema = {
+          "@context": "https://schema.org",
+          "@type": "FoodEstablishment",
+          "name": "Thulasia Foods",
+          "image": "https://thulasia.in/logo.png",
+          "telephone": "+917373662697",
+          "email": "thulasia.in@gmail.com",
+          "priceRange": "$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "84, Pallakatuputhur, Nanjaiuthukuli, Modakurichy Block",
+            "addressLocality": "Erode",
+            "addressRegion": "Tamil Nadu",
+            "postalCode": "638104",
+            "addressCountry": "IN"
+          }
+        };
+        break;
+      case 'checkout':
+        title = "Secure Checkout | Thulasia Foods Store";
+        description = "Complete your order securely using Razorpay or Cash on Delivery. Freshly roasted on order.";
+        break;
+      default:
+        // Home View LocalBusiness Schema
+        schema = {
+          "@context": "https://schema.org",
+          "@type": "FoodEstablishment",
+          "@id": "https://thulasia.in/#localbusiness",
+          "name": "Thulasia Foods",
+          "image": "https://thulasia.in/logo.png",
+          "url": "https://thulasia.in",
+          "telephone": "+917373662697",
+          "priceRange": "$$",
+          "servesCuisine": "Traditional South Indian",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "84, Pallakatuputhur, Nanjaiuthukuli, Modakurichy Block",
+            "addressLocality": "Erode",
+            "addressRegion": "Tamil Nadu",
+            "postalCode": "638104",
+            "addressCountry": "IN"
+          }
+        };
+        break;
+    }
+    
+    document.title = title;
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description);
+    }
+
+    // Dynamic Schema Injection
+    let schemaScript = document.getElementById('thulasia-jsonld-schema');
+    if (schemaScript) {
+      schemaScript.remove();
+    }
+    if (schema) {
+      schemaScript = document.createElement('script');
+      schemaScript.id = 'thulasia-jsonld-schema';
+      schemaScript.type = 'application/ld+json';
+      schemaScript.text = JSON.stringify(schema);
+      document.head.appendChild(schemaScript);
+    }
+  }, [currentView, products]);
+
   useEffect(() => {
     fetchProducts();
     fetchOffers();
@@ -107,7 +251,9 @@ export default function BuyerApp() {
           justifyContent: 'center',
           gap: '8px',
           flexWrap: 'wrap',
-          fontFamily: "'Outfit', sans-serif"
+          fontFamily: "'Outfit', sans-serif",
+          minHeight: '40px',
+          boxSizing: 'border-box'
         }}>
           {/* Free delivery badge */}
           {deliverySettings.freeDeliveryEnabled && (
@@ -167,7 +313,7 @@ export default function BuyerApp() {
                   {[
                     { icon: Award, title: '100% Natural', desc: 'No chemical preservatives, no MSG, and no artificial coloring agents. Only pure native ingredients sourced directly from farmers.' },
                     { icon: CheckCircle, title: 'Traditionally Roasted', desc: 'Dry roasted slowly in small batches over iron pans to preserve volatile oils and deliver that rich, home-cooked aroma.' },
-                    { icon: ShieldCheck, title: 'FSSAI Registered', desc: 'Processed under strict hygienic conditions. Fully compliant with food safety regulations. FSSAI No: 22424573000315.' },
+                    { icon: ShieldCheck, title: 'FSSAI Registered', desc: 'Processed under strict hygienic conditions. Fully compliant with food safety regulations. FSSAI No: 22426062000191.' },
                   ].map(({ icon: Icon, title, desc }) => (
                     <div key={title} className="card" style={{ padding: '40px 32px', textAlign: 'center' }}>
                       <div style={{ backgroundColor: 'rgba(17,61,38,0.05)', color: 'var(--primary)', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
@@ -277,7 +423,7 @@ export default function BuyerApp() {
                       { icon: MapPin, title: 'Premises Address', content: deliverySettings.address || '84, Pallakatuputhur, Nanjaiuthukuli,\nModakurichy Block, Erode,\nTamil Nadu - 638104, India' },
                       { icon: Phone, title: 'Call / WhatsApp', content: deliverySettings.phone || '+91 12345 67890\n+91 98765 43210' },
                       { icon: Mail, title: 'Support Email', content: deliverySettings.email || 'contact@thulasiafoods.com' },
-                      { icon: Award, title: 'FSSAI Registration', content: deliverySettings.fssai || 'License No: 22424573000315\nCategory: Registration [Tamil Nadu]' },
+                      { icon: Award, title: 'FSSAI Registration', content: deliverySettings.fssai || 'License No: 22426062000191\nCategory: Registration [Tamil Nadu]' },
                     ].map(({ icon: Icon, title, content }) => (
                       <div key={title} style={{ display: 'flex', gap: '16px' }}>
                         <div style={{ color: 'var(--primary)', marginTop: '4px' }}><Icon size={20} /></div>
@@ -353,7 +499,7 @@ export default function BuyerApp() {
               <p style={{ fontSize: '13px', lineHeight: 1.5, marginBottom: '10px' }}>Registered Manufacturer under FSSAI, Government of Tamil Nadu.</p>
               <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 16px', borderRadius: '8px', fontSize: '12px' }}>
                 <span style={{ display: 'block', color: 'var(--accent)', fontWeight: 'bold' }}>FSSAI REG NO:</span>
-                <span style={{ color: 'white', fontFamily: 'monospace', fontSize: '13px' }}>{deliverySettings.fssaiNumber || '22424573000315'}</span>
+                <span style={{ color: 'white', fontFamily: 'monospace', fontSize: '13px' }}>{deliverySettings.fssaiNumber || '22426062000191'}</span>
               </div>
             </div>
           </div>
@@ -373,6 +519,7 @@ export default function BuyerApp() {
           onUpdateQuantity={updateCartQuantity}
           onRemove={removeFromCart}
           onCheckout={() => { setIsCartOpen(false); setCurrentView('checkout'); }}
+          deliverySettings={deliverySettings}
         />
       )}
 

@@ -137,7 +137,7 @@ export default function Recipes() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '2px' }}>Kitchen Inspiration</span>
-          <h2 style={{ fontSize: '36px', fontWeight: 800, marginTop: '8px' }}>Thulasia Recipe Hub</h2>
+          <h1 style={{ fontSize: '36px', fontWeight: 800, marginTop: '8px', color: 'var(--primary-dark)', fontFamily: "'Outfit', sans-serif" }}>Thulasia Traditional Recipe Hub</h1>
           <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '12px auto 0' }}>
             Learn how to cook authentic, traditional South Indian dishes using Thulasia Foods spice blends and podis.
           </p>

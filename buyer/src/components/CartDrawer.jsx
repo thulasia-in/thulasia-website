@@ -1,7 +1,13 @@
 import React from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 
-export default function CartDrawer({ cart, subtotal, isOpen, onClose, onUpdateQuantity, onRemove, onCheckout }) {
+export default function CartDrawer({ cart, subtotal, isOpen, onClose, onUpdateQuantity, onRemove, onCheckout, deliverySettings }) {
+  const settings = deliverySettings || { shippingFee: 40, freeDeliveryEnabled: false, freeDeliveryThreshold: 500 };
+  const freeShippingThreshold = settings.freeDeliveryThreshold || 500;
+  const isFreeShipping = settings.freeDeliveryEnabled || subtotal >= freeShippingThreshold;
+  const remainingForFreeShipping = freeShippingThreshold - subtotal;
+  const progressPercentage = settings.freeDeliveryEnabled ? 100 : Math.min((subtotal / freeShippingThreshold) * 100, 100);
+
   return (
     <div
       className="cart-drawer-overlay"
@@ -76,6 +82,46 @@ export default function CartDrawer({ cart, subtotal, isOpen, onClose, onUpdateQu
           flexDirection: 'column',
           gap: '16px'
         }}>
+          {cart.length > 0 && (
+            <div style={{
+              backgroundColor: 'var(--bg-white)',
+              padding: '16px',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)',
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              marginBottom: '8px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-dark)' }}>
+                <span style={{ fontSize: '16px' }}>🚚</span>
+                <span style={{ fontWeight: 500 }}>
+                  {isFreeShipping ? (
+                    <span>Congratulations! You have unlocked <strong>FREE Shipping</strong>!</span>
+                  ) : (
+                    <span>Add <strong>₹{remainingForFreeShipping}</strong> more to unlock <strong>FREE Shipping</strong>!</span>
+                  )}
+                </span>
+              </div>
+              <div style={{
+                height: '6px',
+                backgroundColor: 'rgba(17, 61, 38, 0.08)',
+                borderRadius: '9999px',
+                overflow: 'hidden',
+                position: 'relative'
+              }}>
+                <div style={{
+                  height: '100%',
+                  width: `${progressPercentage}%`,
+                  background: isFreeShipping ? 'linear-gradient(90deg, #2e7d32, #4caf50)' : 'linear-gradient(90deg, var(--accent), var(--accent-light))',
+                  borderRadius: '9999px',
+                  transition: 'width 0.4s ease-out'
+                }} />
+              </div>
+            </div>
+          )}
+
           {cart.length === 0 ? (
             <div style={{
               textAlign: 'center',

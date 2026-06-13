@@ -9,9 +9,60 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
     phone: '',
     address: '',
     city: '',
-    pincode: '638104', // Default to Erode PIN
+    pincode: '',
     state: 'Tamil Nadu'
   });
+
+  const [checkoutStep, setCheckoutStep] = useState(1); // 1 = Shipping, 2 = Payment
+  const [formErrors, setFormErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    pincode: ''
+  });
+
+  const validateStep1 = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = 'Full Name is required';
+    
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!formData.email.trim()) {
+      errors.email = 'Gmail address is required';
+    } else if (!emailRegex.test(formData.email.trim())) {
+      errors.email = 'Please enter a valid email address';
+    }
+    
+    // Phone validation (10 digits, starting with 6-9)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!formData.phone.trim()) {
+      errors.phone = 'WhatsApp number is required';
+    } else if (!phoneRegex.test(formData.phone.trim())) {
+      errors.phone = 'Please enter a valid 10-digit mobile number';
+    }
+    
+    if (!formData.address.trim()) errors.address = 'Delivery address is required';
+    if (!formData.city.trim()) errors.city = 'City name is required';
+    
+    // Pincode validation (6 digits)
+    const pincodeRegex = /^\d{6}$/;
+    if (!formData.pincode.trim()) {
+      errors.pincode = 'Pincode is required';
+    } else if (!pincodeRegex.test(formData.pincode.trim())) {
+      errors.pincode = 'Please enter a valid 6-digit pincode';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const goToStep2 = () => {
+    if (validateStep1()) {
+      setCheckoutStep(2);
+    }
+  };
 
   const [paymentStep, setPaymentStep] = useState('checkout'); // checkout | success
   const [activePaymentMethod, setActivePaymentMethod] = useState('razorpay'); // razorpay | cod
@@ -115,7 +166,18 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
   const total = subtotal + shipping + gst - discountAmount;
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormErrors(prev => ({ ...prev, [name]: '' }));
+    
+    if (name === 'phone' || name === 'pincode') {
+      const cleanValue = value.replace(/[^0-9]/g, '');
+      const maxLength = name === 'phone' ? 10 : 6;
+      if (cleanValue.length <= maxLength) {
+        setFormData(prev => ({ ...prev, [name]: cleanValue }));
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleApplyCoupon = (e) => {
@@ -140,6 +202,10 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    if (!validateStep1()) {
+      setCheckoutStep(1);
+      return;
+    }
     if (cart.length === 0) {
       alert('Your cart is empty.');
       return;
@@ -517,7 +583,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
             </div>
             <div style={{ textAlign: 'right', fontSize: '12px' }}>
               <span style={{ display: 'block', fontWeight: 'bold' }}>FSSAI Registration Receipt</span>
-              <span style={{ color: 'var(--text-muted)' }}>FSSAI No: 22424573000315</span>
+              <span style={{ color: 'var(--text-muted)' }}>FSSAI No: 22426062000191</span>
             </div>
           </div>
 
@@ -766,211 +832,302 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
         }}>
           {/* Left: Shipping Form */}
           <div className="card glow-on-hover" style={{ padding: '40px 24px' }}>
-            <h3 style={{ fontSize: '20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <MapPin size={20} /> Shipping Details
-            </h3>
-            
+            {/* Step Indicator Header */}
+            <div style={{ display: 'flex', gap: '24px', marginBottom: '32px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
+              <span 
+                style={{ 
+                  fontFamily: "'Outfit', sans-serif", 
+                  fontWeight: 700, 
+                  fontSize: '14px', 
+                  color: checkoutStep === 1 ? 'var(--primary)' : 'var(--text-muted)',
+                  borderBottom: checkoutStep === 1 ? '2px solid var(--primary)' : '2px solid transparent',
+                  paddingBottom: '8px',
+                  cursor: 'pointer'
+                }} 
+                onClick={() => { if (checkoutStep === 2) setCheckoutStep(1); }}
+              >
+                1. Shipping Info
+              </span>
+              <span 
+                style={{ 
+                  fontFamily: "'Outfit', sans-serif", 
+                  fontWeight: 700, 
+                  fontSize: '14px', 
+                  color: checkoutStep === 2 ? 'var(--primary)' : 'var(--text-muted)',
+                  borderBottom: checkoutStep === 2 ? '2px solid var(--primary)' : '2px solid transparent',
+                  paddingBottom: '8px',
+                  cursor: checkoutStep === 2 ? 'pointer' : 'not-allowed'
+                }}
+                onClick={() => { if (checkoutStep === 1 && validateStep1()) setCheckoutStep(2); }}
+              >
+                2. Payment Details
+              </span>
+            </div>
+
             <form onSubmit={handleFormSubmit}>
-              <div className="responsive-grid-2" style={{ gap: '20px' }}>
-                <div className="form-group">
-                  <label className="form-label">Full Name</label>
-                  <input 
-                    className="form-control form-control-premium"
-                    type="text" 
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleInputChange} 
-                    required 
-                    placeholder="E.g., Rajesh Kumar" 
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">WhatsApp Number (for updates)</label>
-                  <input 
-                    className="form-control form-control-premium"
-                    type="tel" 
-                    name="phone" 
-                    value={formData.phone} 
-                    onChange={handleInputChange} 
-                    required 
-                    placeholder="10-digit WhatsApp number" 
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Gmail Address (for updates)</label>
-                <input 
-                  className="form-control form-control-premium"
-                  type="email" 
-                  name="email" 
-                  value={formData.email} 
-                  onChange={handleInputChange} 
-                  required 
-                  placeholder="E.g., name@gmail.com" 
-                />
-              </div>
-
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                backgroundColor: 'rgba(17, 61, 38, 0.04)', 
-                padding: '10px 14px', 
-                borderRadius: '8px',
-                fontSize: '12px',
-                color: 'var(--primary-dark)',
-                marginBottom: '20px',
-                borderLeft: '3px solid var(--accent)'
-              }}>
-                <span style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 'bold' }}>✓</span>
-                <span>Order tracking details will be automatically sent to this WhatsApp number and Gmail address.</span>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Delivery Address (Door No, Street Name)</label>
-                <input 
-                  className="form-control form-control-premium"
-                  type="text" 
-                  name="address" 
-                  value={formData.address} 
-                  onChange={handleInputChange} 
-                  required 
-                  placeholder="Apartment, Street Name, Locality" 
-                />
-              </div>
-
-              <div className="responsive-grid-3" style={{ gap: '16px' }}>
-                <div className="form-group">
-                  <label className="form-label">City</label>
-                  <input 
-                    className="form-control form-control-premium"
-                    type="text" 
-                    name="city" 
-                    value={formData.city} 
-                    onChange={handleInputChange} 
-                    required 
-                    placeholder="E.g. Erode" 
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">State</label>
-                  <input 
-                    className="form-control form-control-premium"
-                    type="text" 
-                    name="state" 
-                    value={formData.state} 
-                    onChange={handleInputChange} 
-                    required 
-                    disabled 
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Pincode</label>
-                  <input 
-                    className="form-control form-control-premium"
-                    type="text" 
-                    inputMode="numeric"
-                    pattern="[0-9]{6}"
-                    maxLength={6}
-                    name="pincode" 
-                    value={formData.pincode} 
-                    onChange={handleInputChange} 
-                    required 
-                    placeholder="638XXX" 
-                    style={{ fontSize: '16px' }}
-                  />
-                </div>
-              </div>
-
-              {/* Payment Method Selector */}
-              <div style={{ marginTop: '20px', marginBottom: '4px' }}>
-                <label className="form-label" style={{ marginBottom: '10px', display: 'block' }}>Payment Method</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-                  {/* Razorpay option */}
-                  <div
-                    onClick={() => setActivePaymentMethod('razorpay')}
-                    style={{
-                      border: activePaymentMethod === 'razorpay' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                      backgroundColor: activePaymentMethod === 'razorpay' ? 'rgba(17,61,38,0.04)' : 'var(--bg-white)',
-                      padding: '14px 16px',
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      transition: 'var(--transition)'
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      checked={activePaymentMethod === 'razorpay'}
-                      onChange={() => setActivePaymentMethod('razorpay')}
-                      style={{ accentColor: 'var(--primary)', width: '18px', height: '18px', flexShrink: 0 }}
-                    />
-                    <div>
-                      <strong style={{ fontSize: '14px', color: 'var(--primary-dark)', display: 'block' }}>💳 Pay Online (Razorpay)</strong>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>UPI, Cards, Net Banking, Wallets — 100% Secure</span>
+              {checkoutStep === 1 ? (
+                /* STEP 1: Shipping and Contact details */
+                <div className="animate-fade-in">
+                  <h3 style={{ fontSize: '20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <MapPin size={20} /> Shipping Details
+                  </h3>
+                  
+                  <div className="responsive-grid-2" style={{ gap: '20px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Full Name</label>
+                      <input 
+                        className="form-control form-control-premium"
+                        type="text" 
+                        name="name" 
+                        value={formData.name} 
+                        onChange={handleInputChange} 
+                        required 
+                        placeholder="E.g., Rajesh Kumar" 
+                      />
+                      {formErrors.name && (
+                        <p style={{ color: '#C5221F', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>{formErrors.name}</p>
+                      )}
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">WhatsApp Number (for updates)</label>
+                      <input 
+                        className="form-control form-control-premium"
+                        type="tel" 
+                        name="phone" 
+                        value={formData.phone} 
+                        onChange={handleInputChange} 
+                        required 
+                        placeholder="10-digit WhatsApp number" 
+                      />
+                      {formErrors.phone && (
+                        <p style={{ color: '#C5221F', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>{formErrors.phone}</p>
+                      )}
                     </div>
                   </div>
 
-                  {/* COD option */}
-                  <div
-                    onClick={() => setActivePaymentMethod('cod')}
-                    style={{
-                      border: activePaymentMethod === 'cod' ? '2px solid var(--accent)' : '1px solid var(--border-color)',
-                      backgroundColor: activePaymentMethod === 'cod' ? 'rgba(180,133,72,0.05)' : 'var(--bg-white)',
-                      padding: '14px 16px',
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      transition: 'var(--transition)'
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      checked={activePaymentMethod === 'cod'}
-                      onChange={() => setActivePaymentMethod('cod')}
-                      style={{ accentColor: 'var(--accent)', width: '18px', height: '18px', flexShrink: 0 }}
+                  <div className="form-group">
+                    <label className="form-label">Gmail Address (for updates)</label>
+                    <input 
+                      className="form-control form-control-premium"
+                      type="email" 
+                      name="email" 
+                      value={formData.email} 
+                      onChange={handleInputChange} 
+                      required 
+                      placeholder="E.g., name@gmail.com" 
                     />
-                    <div>
-                      <strong style={{ fontSize: '14px', color: 'var(--accent-dark)', display: 'block' }}>📦 Cash on Delivery (COD)</strong>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Pay cash or UPI at doorstep upon delivery</span>
-                    </div>
+                    {formErrors.email && (
+                      <p style={{ color: '#C5221F', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>{formErrors.email}</p>
+                    )}
                   </div>
 
-                </div>
-
-                {activePaymentMethod === 'cod' && (
-                  <div style={{
-                    marginTop: '10px',
-                    padding: '10px 14px',
-                    backgroundColor: 'rgba(180,133,72,0.07)',
-                    border: '1px solid rgba(180,133,72,0.25)',
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px', 
+                    backgroundColor: 'rgba(17, 61, 38, 0.04)', 
+                    padding: '10px 14px', 
                     borderRadius: '8px',
                     fontSize: '12px',
-                    color: 'var(--accent-dark)'
+                    color: 'var(--primary-dark)',
+                    marginBottom: '20px',
+                    borderLeft: '3px solid var(--accent)'
                   }}>
-                    ℹ️ Our team will call you to confirm before dispatch.
+                    <span style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 'bold' }}>✓</span>
+                    <span>Order tracking details will be automatically sent to this WhatsApp number and Gmail address.</span>
                   </div>
-                )}
-              </div>
 
-              <button
-                type="submit"
-                className={activePaymentMethod === 'cod' ? 'btn btn-accent' : 'btn btn-primary'}
-                style={{ width: '100%', padding: '14px', fontSize: '16px', marginTop: '16px' }}
-              >
-                {activePaymentMethod === 'cod'
-                  ? `Place COD Order (₹${total})`
-                  : `Pay ₹${total} with Razorpay →`
-                }
-              </button>
+                  <div className="form-group">
+                    <label className="form-label">Delivery Address (Door No, Street Name)</label>
+                    <input 
+                      className="form-control form-control-premium"
+                      type="text" 
+                      name="address" 
+                      value={formData.address} 
+                      onChange={handleInputChange} 
+                      required 
+                      placeholder="Apartment, Street Name, Locality" 
+                    />
+                    {formErrors.address && (
+                      <p style={{ color: '#C5221F', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>{formErrors.address}</p>
+                    )}
+                  </div>
+
+                  <div className="responsive-grid-3" style={{ gap: '16px' }}>
+                    <div className="form-group">
+                      <label className="form-label">City</label>
+                      <input 
+                        className="form-control form-control-premium"
+                        type="text" 
+                        name="city" 
+                        value={formData.city} 
+                        onChange={handleInputChange} 
+                        required 
+                        placeholder="E.g. Erode" 
+                      />
+                      {formErrors.city && (
+                        <p style={{ color: '#C5221F', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>{formErrors.city}</p>
+                      )}
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">State</label>
+                      <input 
+                        className="form-control form-control-premium"
+                        type="text" 
+                        name="state" 
+                        value={formData.state} 
+                        onChange={handleInputChange} 
+                        required 
+                        disabled 
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Pincode</label>
+                      <input 
+                        className="form-control form-control-premium"
+                        type="text" 
+                        inputMode="numeric"
+                        pattern="[0-9]{6}"
+                        maxLength={6}
+                        name="pincode" 
+                        value={formData.pincode} 
+                        onChange={handleInputChange} 
+                        required 
+                        placeholder="6-digit Pincode" 
+                        style={{ fontSize: '16px' }}
+                      />
+                      {formErrors.pincode && (
+                        <p style={{ color: '#C5221F', fontSize: '11px', marginTop: '4px', fontWeight: 500 }}>{formErrors.pincode}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={goToStep2}
+                    className="btn btn-primary"
+                    style={{ width: '100%', padding: '14px', fontSize: '16px', marginTop: '16px' }}
+                  >
+                    Continue to Payment →
+                  </button>
+                </div>
+              ) : (
+                /* STEP 2: Payment Details and Selection */
+                <div className="animate-fade-in">
+                  <button 
+                    type="button" 
+                    onClick={() => setCheckoutStep(1)} 
+                    style={{ 
+                      border: 'none', 
+                      background: 'none', 
+                      color: 'var(--primary)', 
+                      cursor: 'pointer', 
+                      fontSize: '13px', 
+                      fontWeight: 600, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '4px',
+                      marginBottom: '20px',
+                      padding: 0
+                    }}
+                  >
+                    ← Back to Shipping Info
+                  </button>
+
+                  <h3 style={{ fontSize: '20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CreditCard size={20} /> Choose Payment Method
+                  </h3>
+
+                  {/* Payment Method Selector */}
+                  <div style={{ marginBottom: '4px' }}>
+                    <label className="form-label" style={{ marginBottom: '10px', display: 'block' }}>Payment Method</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+                      {/* Razorpay option */}
+                      <div
+                        onClick={() => setActivePaymentMethod('razorpay')}
+                        style={{
+                          border: activePaymentMethod === 'razorpay' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                          backgroundColor: activePaymentMethod === 'razorpay' ? 'rgba(17,61,38,0.04)' : 'var(--bg-white)',
+                          padding: '14px 16px',
+                          borderRadius: '12px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          transition: 'var(--transition)'
+                        }}
+                      >
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          checked={activePaymentMethod === 'razorpay'}
+                          onChange={() => setActivePaymentMethod('razorpay')}
+                          style={{ accentColor: 'var(--primary)', width: '18px', height: '18px', flexShrink: 0 }}
+                        />
+                        <div>
+                          <strong style={{ fontSize: '14px', color: 'var(--primary-dark)', display: 'block' }}>💳 Pay Online (Razorpay)</strong>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>UPI, Cards, Net Banking, Wallets — 100% Secure</span>
+                        </div>
+                      </div>
+
+                      {/* COD option */}
+                      <div
+                        onClick={() => setActivePaymentMethod('cod')}
+                        style={{
+                          border: activePaymentMethod === 'cod' ? '2px solid var(--accent)' : '1px solid var(--border-color)',
+                          backgroundColor: activePaymentMethod === 'cod' ? 'rgba(180,133,72,0.05)' : 'var(--bg-white)',
+                          padding: '14px 16px',
+                          borderRadius: '12px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          transition: 'var(--transition)'
+                        }}
+                      >
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          checked={activePaymentMethod === 'cod'}
+                          onChange={() => setActivePaymentMethod('cod')}
+                          style={{ accentColor: 'var(--accent)', width: '18px', height: '18px', flexShrink: 0 }}
+                        />
+                        <div>
+                          <strong style={{ fontSize: '14px', color: 'var(--accent-dark)', display: 'block' }}>📦 Cash on Delivery (COD)</strong>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Pay cash or UPI at doorstep upon delivery</span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    {activePaymentMethod === 'cod' && (
+                      <div style={{
+                        marginTop: '10px',
+                        padding: '10px 14px',
+                        backgroundColor: 'rgba(180,133,72,0.07)',
+                        border: '1px solid rgba(180,133,72,0.25)',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        color: 'var(--accent-dark)'
+                      }}>
+                        ℹ️ Our team will call you to confirm before dispatch.
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={activePaymentMethod === 'cod' ? 'btn btn-accent' : 'btn btn-primary'}
+                    style={{ width: '100%', padding: '14px', fontSize: '16px', marginTop: '24px' }}
+                  >
+                    {activePaymentMethod === 'cod'
+                      ? `Place COD Order (₹${total})`
+                      : `Pay ₹${total} with Razorpay →`
+                    }
+                  </button>
+                </div>
+              )}
             </form>
           </div>
 

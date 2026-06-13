@@ -467,7 +467,7 @@ export default function SellerApp() {
               <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: 'rgba(17,61,38,0.05)', padding: '14px 18px', borderRadius: '8px' }}>
                 <FileText size={18} style={{ color: 'var(--primary)' }} />
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                  FSSAI registration verified and active. FSSAI No: <strong>{settings.fssaiNumber || '22424573000315'}</strong>
+                  FSSAI registration verified and active. FSSAI No: <strong>{settings.fssaiNumber || '22426062000191'}</strong>
                 </span>
               </div>
 
@@ -548,7 +548,7 @@ export default function SellerApp() {
                         required
                         value={formSettings.fssaiNumber}
                         onChange={e => setFormSettings({ ...formSettings, fssaiNumber: e.target.value })}
-                        placeholder="e.g. 22424573000315"
+                        placeholder="e.g. 22426062000191"
                       />
                     </div>
                   </div>

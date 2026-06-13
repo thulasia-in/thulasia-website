@@ -131,7 +131,7 @@ export default function Store({ products, addToCart, setSelectedProduct }) {
         {/* Page Header */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '2px' }}>Product Catalog</span>
-          <h2 style={{ fontSize: '36px', fontWeight: 800, marginTop: '8px' }}>Freshly Roasted Spice Mixes</h2>
+          <h1 style={{ fontSize: '36px', fontWeight: 800, marginTop: '8px', color: 'var(--primary-dark)', fontFamily: "'Outfit', sans-serif" }}>Buy Authentic Tamil Nadu Style Podis Online</h1>
           <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '12px auto 0' }}>
             Browse our range of traditional South Indian podis and masalas. Freshly made in Erode and shipped directly to your kitchen.
           </p>
@@ -236,6 +236,7 @@ export default function Store({ products, addToCart, setSelectedProduct }) {
                     <img 
                       src={product.imageUrl} 
                       alt={product.name} 
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '100%',
@@ -244,8 +245,9 @@ export default function Store({ products, addToCart, setSelectedProduct }) {
                     />
                   ) : product.id === 1 ? (
                     <img 
-                      src="/pouch.png" 
+                      src="/pouch.webp" 
                       alt={product.name} 
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '100%',

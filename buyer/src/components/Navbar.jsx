@@ -30,28 +30,32 @@ export default function Navbar({ currentView, setCurrentView, cartCount, setIsCa
 
         {/* Desktop Nav Links */}
         <div className="desktop-nav-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
-          {navLinks.map(({ view, label, icon: Icon }) => (
-            <span
-              key={view}
-              onClick={() => setCurrentView(view)}
-              style={{
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 600,
-                fontSize: '15px',
-                cursor: 'pointer',
-                color: currentView === view ? 'var(--primary)' : 'var(--text-muted)',
-                borderBottom: currentView === view ? '2px solid var(--primary)' : '2px solid transparent',
-                paddingBottom: '4px',
-                transition: 'var(--transition)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              {Icon && <Icon size={15} />}
-              {label}
-            </span>
-          ))}
+          {navLinks.map(({ view, label, icon: Icon }) => {
+            const hash = view === 'home' ? '#/' : `#/${view}`;
+            return (
+              <a
+                key={view}
+                href={hash}
+                style={{
+                  fontFamily: "'Outfit', sans-serif",
+                  fontWeight: 600,
+                  fontSize: '15px',
+                  cursor: 'pointer',
+                  color: currentView === view ? 'var(--primary)' : 'var(--text-muted)',
+                  borderBottom: currentView === view ? '2px solid var(--primary)' : '2px solid transparent',
+                  paddingBottom: '4px',
+                  transition: 'var(--transition)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  textDecoration: 'none'
+                }}
+              >
+                {Icon && <Icon size={15} />}
+                {label}
+              </a>
+            );
+          })}
 
           {/* Cart Button */}
           <button
@@ -150,30 +154,32 @@ export default function Navbar({ currentView, setCurrentView, cartCount, setIsCa
 
       {/* Mobile Menu Dropdown */}
       <div className={`mobile-nav-menu ${isMenuOpen ? 'open' : ''}`}>
-        {navLinks.map(({ view, label, icon: Icon }) => (
-          <div
-            key={view}
-            onClick={() => {
-              setCurrentView(view);
-              setIsMenuOpen(false);
-            }}
-            style={{
-              fontFamily: "'Outfit', sans-serif",
-              fontWeight: 600,
-              fontSize: '16px',
-              cursor: 'pointer',
-              color: currentView === view ? 'var(--primary)' : 'var(--text-muted)',
-              padding: '12px 0',
-              borderBottom: '1px solid rgba(17, 61, 38, 0.05)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
-            }}
-          >
-            {Icon && <Icon size={18} />}
-            {label}
-          </div>
-        ))}
+        {navLinks.map(({ view, label, icon: Icon }) => {
+          const hash = view === 'home' ? '#/' : `#/${view}`;
+          return (
+            <a
+              key={view}
+              href={hash}
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: 600,
+                fontSize: '16px',
+                cursor: 'pointer',
+                color: currentView === view ? 'var(--primary)' : 'var(--text-muted)',
+                padding: '12px 0',
+                borderBottom: '1px solid rgba(17, 61, 38, 0.05)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                textDecoration: 'none'
+              }}
+            >
+              {Icon && <Icon size={18} />}
+              {label}
+            </a>
+          );
+        })}
       </div>
     </nav>
   );

@@ -64,7 +64,7 @@ const DEFAULT_PRODUCTS = [
       "Dietary Fibre": "8.6g",
       "Sodium": "620mg"
     },
-    fssai: "22424573000315",
+    fssai: "22426062000191",
     inStock: true,
     imageType: 'garlic'
   },
@@ -90,7 +90,7 @@ const DEFAULT_PRODUCTS = [
       "Dietary Fibre": "11.2g",
       "Sodium": "590mg"
     },
-    fssai: "22424573000315",
+    fssai: "22426062000191",
     inStock: true,
     imageType: 'curry'
   },
@@ -116,7 +116,7 @@ const DEFAULT_PRODUCTS = [
       "Dietary Fibre": "9.3g",
       "Sodium": "610mg"
     },
-    fssai: "22424573000315",
+    fssai: "22426062000191",
     inStock: true,
     imageType: 'gunpowder'
   }
@@ -254,8 +254,8 @@ const DEFAULT_SETTINGS = {
   address: "84, Pallakatuputhur, Nanjaiuthukuli,\nModakurichy Block, Erode,\nTamil Nadu - 638104, India",
   phone: "+91 12345 67890\n+91 98765 43210",
   email: "contact@thulasiafoods.com",
-  fssai: "License No: 22424573000315\nCategory: Registration [Tamil Nadu]",
-  fssaiNumber: "22424573000315"
+  fssai: "License No: 22426062000191\nCategory: Registration [Tamil Nadu]",
+  fssaiNumber: "22426062000191"
 };
 
 function readDB() {
@@ -345,7 +345,7 @@ function sendTrackingNotification(order, actionType = 'CREATED') {
     console.log(`   \n   You can track your order's sourcing, roasting, and shipping progress in real-time:`);
     console.log(`   👉 ${trackingLink}`);
     console.log(`   \n   Best Regards,`);
-    console.log(`   Thulasia Foods support (fssai: 22424573000315)`);
+    console.log(`   Thulasia Foods support (fssai: 22426062000191)`);
   } else {
     // Status update (Shipped / Delivered)
     const statusText = order.status === 'Shipped' 
@@ -408,7 +408,7 @@ app.post('/api/products', (req, res) => {
       "Dietary Fibre": "9.0g",
       "Sodium": "600mg"
     },
-    fssai: "22424573000315",
+    fssai: "22426062000191",
     inStock: req.body.inStock !== undefined ? req.body.inStock : true,
     imageUrl: req.body.imageUrl || null,
     imageType: req.body.imageType || 'garlic'
