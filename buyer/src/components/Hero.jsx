@@ -34,7 +34,7 @@ export default function Hero({ setCurrentView, addToCart, products }) {
 
   return (
     <section className="animate-fade-in" style={{
-      padding: '80px 0 100px',
+      padding: 'clamp(40px, 8vw, 80px) 0 clamp(60px, 10vw, 100px)',
       background: 'radial-gradient(circle at 80% 20%, rgba(17, 61, 38, 0.04) 0%, rgba(17, 61, 38, 0) 50%), var(--bg-cream)',
       borderBottom: '1px solid var(--border-color)',
       position: 'relative',
@@ -49,11 +49,9 @@ export default function Hero({ setCurrentView, addToCart, products }) {
       </div>
 
       <div className="container">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1.1fr 0.9fr',
-          gap: '60px',
-          alignItems: 'center'
+        <div className="responsive-grid-2" style={{
+          alignItems: 'center',
+          gap: '40px'
         }}>
           {/* Text Content */}
           <div style={{ zIndex: 2 }}>
@@ -65,10 +63,10 @@ export default function Hero({ setCurrentView, addToCart, products }) {
             </div>
 
             <h1 style={{
-              fontSize: '56px',
-              lineHeight: 1.1,
+              fontSize: 'clamp(28px, 6vw, 56px)',
+              lineHeight: 1.15,
               fontWeight: 800,
-              letterSpacing: '-1.5px',
+              letterSpacing: '-0.5px',
               marginBottom: '24px',
               color: 'var(--primary-dark)'
             }}>
@@ -76,9 +74,9 @@ export default function Hero({ setCurrentView, addToCart, products }) {
             </h1>
             
             <p style={{
-              fontSize: '18px',
+              fontSize: 'clamp(14px, 2.5vw, 18px)',
               color: 'var(--text-muted)',
-              marginBottom: '40px',
+              marginBottom: '32px',
               lineHeight: 1.6,
               maxWidth: '540px'
             }}>
@@ -118,22 +116,23 @@ export default function Hero({ setCurrentView, addToCart, products }) {
             {/* Quick trust items */}
             <div style={{
               display: 'flex',
-              gap: '30px',
-              marginTop: '56px',
+              gap: '16px',
+              marginTop: '40px',
               borderTop: '1px solid var(--border-color)',
-              paddingTop: '32px'
+              paddingTop: '24px',
+              flexWrap: 'wrap'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ShieldCheck size={20} style={{ color: 'var(--primary)' }} />
-                <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-dark)' }}>No Preservatives</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'max-content' }}>
+                <ShieldCheck size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-dark)' }}>No Preservatives</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ShieldCheck size={20} style={{ color: 'var(--primary)' }} />
-                <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-dark)' }}>Slow Pan-Roasted</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'max-content' }}>
+                <ShieldCheck size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-dark)' }}>Slow Pan-Roasted</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ShieldCheck size={20} style={{ color: 'var(--primary)' }} />
-                <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-dark)' }}>100% Vegetarian</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'max-content' }}>
+                <ShieldCheck size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-dark)' }}>100% Vegetarian</span>
               </div>
             </div>
           </div>

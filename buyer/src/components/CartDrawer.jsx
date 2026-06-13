@@ -3,7 +3,9 @@ import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function CartDrawer({ cart, subtotal, isOpen, onClose, onUpdateQuantity, onRemove, onCheckout }) {
   return (
-    <div style={{
+    <div
+      className="cart-drawer-overlay"
+      style={{
       position: 'fixed',
       top: 0,
       left: 0,
@@ -19,7 +21,7 @@ export default function CartDrawer({ cart, subtotal, isOpen, onClose, onUpdateQu
       
       {/* Drawer Panel */}
       <div 
-        className="animate-slide-left"
+        className="animate-slide-left cart-drawer-panel"
         style={{
           width: '100%',
           maxWidth: '440px',

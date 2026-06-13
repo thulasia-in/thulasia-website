@@ -169,7 +169,7 @@ export default function Store({ products, addToCart, setSelectedProduct }) {
           </div>
 
           {/* Search Input */}
-          <div style={{
+          <div className="search-wrapper" style={{
             position: 'relative',
             width: '100%',
             maxWidth: '320px'
@@ -197,7 +197,7 @@ export default function Store({ products, addToCart, setSelectedProduct }) {
             />
           </div>
         </div>
-
+ 
         {/* Products Grid */}
         {filteredProducts.length === 0 ? (
           <div style={{
@@ -212,9 +212,7 @@ export default function Store({ products, addToCart, setSelectedProduct }) {
             <p style={{ color: 'var(--text-muted)' }}>Try modifying your search keywords or checking a different category.</p>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          <div className="products-grid" style={{
             gap: '30px'
           }}>
             {filteredProducts.map(product => (

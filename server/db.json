@@ -105,7 +105,153 @@
       "imageType": "garlic"
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "orderId": "ORD-388588",
+      "referenceNo": "COD-388588",
+      "transactionNo": "COD-388588",
+      "razorpayId": "pay_s3yzpe33pql",
+      "date": "11/06/2026",
+      "time": "11:06 PM",
+      "customerName": "fgfxjcv",
+      "email": "sadha8986@gmail.com",
+      "phone": "7373662697",
+      "address": "84,pallakttupudhur, erode, Tamil Nadu - 638104",
+      "items": [
+        {
+          "id": 1,
+          "name": "Poondu Podi (Garlic Podi)",
+          "price": 120,
+          "quantity": 1,
+          "weight": "100g"
+        }
+      ],
+      "subtotal": 120,
+      "shipping": 30,
+      "gst": 6,
+      "discount": 0,
+      "couponCode": "",
+      "total": 156,
+      "status": "Pending",
+      "paymentMethod": "COD"
+    },
+    {
+      "orderId": "ORD-223787",
+      "referenceNo": "order_T0PL6QTzZX1TKc",
+      "transactionNo": 464866836181678,
+      "razorpayId": "pay_T0PM75HwZNmI24",
+      "date": "11/06/2026",
+      "time": "11:03 PM",
+      "customerName": "sadha",
+      "email": "sadhs2004@gmail.com",
+      "phone": "7373662697",
+      "address": "123 Main Street, Erode, Tamil Nadu - 638104",
+      "items": [
+        {
+          "id": 1,
+          "name": "Poondu Podi (Garlic Podi)",
+          "price": 120,
+          "quantity": 1,
+          "weight": "100g"
+        }
+      ],
+      "subtotal": 120,
+      "shipping": 30,
+      "gst": 6,
+      "discount": 0,
+      "couponCode": "",
+      "total": 156,
+      "status": "Pending",
+      "paymentMethod": "Online (Razorpay)"
+    },
+    {
+      "orderId": "ORD-425320",
+      "referenceNo": "COD-425320",
+      "transactionNo": "COD-425320",
+      "razorpayId": "pay_dak4jpvyx8",
+      "date": "11/06/2026",
+      "time": "10:50 PM",
+      "customerName": "sadha",
+      "email": "sadhs2004@gmail.com",
+      "phone": "7373662697",
+      "address": "123 Main Street, Erode, Tamil Nadu - 638104",
+      "items": [
+        {
+          "id": 2,
+          "name": "Karuveppilai Podi (Curry Leaf Podi)",
+          "price": 110,
+          "quantity": 1,
+          "weight": "100g"
+        }
+      ],
+      "subtotal": 110,
+      "shipping": 30,
+      "gst": 6,
+      "discount": 0,
+      "couponCode": "",
+      "total": 146,
+      "status": "Pending",
+      "paymentMethod": "COD"
+    },
+    {
+      "orderId": "ORD-218354",
+      "referenceNo": "COD-218354",
+      "transactionNo": "COD-218354",
+      "razorpayId": "pay_yr4fut03ga9",
+      "date": "11/06/2026",
+      "time": "10:46 PM",
+      "customerName": "John DoeJohn Doe",
+      "email": "john@example.com",
+      "phone": "9876543210",
+      "address": "123 Main Street, Erode, Tamil Nadu - 638104",
+      "items": [
+        {
+          "id": 1,
+          "name": "Poondu Podi (Garlic Podi)",
+          "price": 120,
+          "quantity": 2,
+          "weight": "100g"
+        }
+      ],
+      "subtotal": 240,
+      "shipping": 30,
+      "gst": 12,
+      "discount": 0,
+      "couponCode": "",
+      "total": 282,
+      "status": "Pending",
+      "paymentMethod": "COD"
+    },
+    {
+      "orderId": "ORD-181660",
+      "referenceNo": "123456789012",
+      "transactionNo": "123456789012",
+      "razorpayId": "pay_qcaazdevfy8",
+      "date": "11/06/2026",
+      "time": "10:29 PM",
+      "customerName": "John Doe",
+      "email": "john@example.com",
+      "phone": "9876543210",
+      "address": "123 Main Street, Erode, Tamil Nadu - 638104",
+      "items": [
+        {
+          "id": 1,
+          "name": "Poondu Podi (Garlic Podi)",
+          "price": 120,
+          "quantity": 2,
+          "weight": "100g"
+        }
+      ],
+      "subtotal": 240,
+      "shipping": 30,
+      "gst": 12,
+      "discount": 0,
+      "couponCode": "",
+      "total": 282,
+      "status": "Pending",
+      "paymentMethod": "UPI"
+    }
+  ],
   "recipes": [
     {
       "id": 1,

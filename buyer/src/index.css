@@ -299,3 +299,347 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+/* Touch scrolling and scroll behavior */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive Grid Helper Classes */
+.responsive-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.responsive-grid-3 {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+}
+
+.responsive-grid-4 {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.modal-content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+}
+
+/* Hamburger mobile nav drawer */
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+}
+
+.mobile-nav-menu {
+  display: none;
+  flex-direction: column;
+  background-color: var(--bg-white);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 24px;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Stepper Styles (Desktop) */
+.stepper-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin-bottom: 40px;
+  background-color: var(--bg-white);
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.stepper-line-horizontal {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: 52px;
+  height: 2px;
+  background-color: var(--border-color);
+  z-index: 1;
+}
+
+.stepper-line-horizontal-progress {
+  position: absolute;
+  left: 60px;
+  top: 52px;
+  height: 2px;
+  background-color: var(--primary);
+  z-index: 2;
+  transition: width 0.4s ease;
+}
+
+.stepper-line-vertical {
+  display: none;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  z-index: 3;
+  gap: 8px;
+}
+
+.step-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--bg-cream);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-weight: bold;
+  font-size: 14px;
+  transition: var(--transition);
+  margin-bottom: 8px;
+}
+
+.step-item.active .step-icon-wrapper {
+  background-color: var(--bg-white);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(180, 133, 72, 0.15);
+}
+
+.step-item.completed .step-icon-wrapper {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.step-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--primary-dark);
+}
+
+.step-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  max-width: 130px;
+}
+
+/* CSS Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Container adjustments */
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Grid adaptations to single column */
+  .responsive-grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  .responsive-grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .responsive-grid-4 {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+  }
+
+  .modal-content-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .mobile-actions-wrapper {
+    display: flex !important;
+  }
+
+  .search-wrapper {
+    max-width: 100% !important;
+    flex: 1;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  /* Navigation elements */
+  .mobile-nav-toggle {
+    display: flex;
+  }
+
+  .desktop-nav-links {
+    display: none !important;
+  }
+
+  .mobile-nav-menu.open {
+    display: flex;
+  }
+
+  /* Ensure touch-friendly tap targets */
+  .btn, button, select, input, textarea, select option {
+    min-height: 44px !important;
+  }
+
+  .btn-icon {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* Convert Cart sidebar to bottom sheet */
+  .cart-drawer-overlay {
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
+  }
+
+  .cart-drawer-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 85vh !important;
+    max-height: 85vh !important;
+    border-radius: 24px 24px 0 0 !important;
+    margin-top: auto !important;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    box-shadow: 0 -10px 30px rgba(17, 61, 38, 0.15) !important;
+  }
+
+  /* Tracking Stepper (horizontal to vertical) */
+  .stepper-container {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+    position: relative;
+    padding-left: 10px;
+  }
+
+  .stepper-line-horizontal {
+    display: none !important;
+  }
+
+  .stepper-line-vertical {
+    display: block !important;
+    position: absolute;
+    left: 25px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background-color: var(--border-color);
+    z-index: 1;
+  }
+
+  .stepper-line-vertical-progress {
+    position: absolute;
+    left: 25px;
+    top: 24px;
+    width: 2px;
+    background-color: var(--primary);
+    z-index: 2;
+    transition: height 0.4s ease;
+  }
+
+  .step-item {
+    flex-direction: row !important;
+    text-align: left !important;
+    width: 100% !important;
+    gap: 16px !important;
+    z-index: 3;
+  }
+
+  .step-icon-wrapper {
+    margin-bottom: 0 !important;
+  }
+
+  .step-info {
+    margin-top: 2px;
+  }
+
+  /* Receipt header: wrap gracefully on narrow screens */
+  .receipt-header {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+
+  /* Value proposition section adjustments */
+  .value-prop-section {
+    padding: 48px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Prevent inputs from zooming on focus by setting 16px font size */
+  .form-control {
+    font-size: 16px !important;
+  }
+
+  /* Products grid layout: stack items in 1 column on very small screens */
+  .products-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* General buttons and inputs padding */
+  .btn {
+    padding: 12px 18px !important;
+    font-size: 14px !important;
+  }
+
+  /* Footer 2-col grid → 1 col on tiny screens */
+  .responsive-grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Extra-small screens: ensure nothing overflows */
+  .container {
+    padding: 0 12px !important;
+  }
+
+  .stepper-container {
+    padding-left: 4px !important;
+  }
+
+  /* Very small screens: stack the 2-col footer too */
+  .responsive-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Touch devices: show quick-view overlay on :active tap */
+@media (hover: none) {
+  .hover-overlay {
+    display: none !important;
+  }
+}
+
+

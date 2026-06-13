@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { CreditCard, ArrowLeft, CheckCircle, ShieldCheck, Printer, Calendar, MapPin, Receipt, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CreditCard, ArrowLeft, CheckCircle, ShieldCheck, Printer, Calendar, MapPin, Receipt } from 'lucide-react';
 import { CONFIG } from '../config';
 
 export default function Checkout({ cart, subtotal, offers = [], deliverySettings = { shippingFee: 40, freeDeliveryEnabled: false, freeDeliveryThreshold: 500 }, onSuccess, setCurrentView }) {
@@ -13,14 +13,90 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
     state: 'Tamil Nadu'
   });
 
-  const [paymentStep, setPaymentStep] = useState('checkout'); // checkout | razorpay | success
-  const [activePaymentMethod, setActivePaymentMethod] = useState('upi'); // upi | card | netbanking
+  const [paymentStep, setPaymentStep] = useState('checkout'); // checkout | success
+  const [activePaymentMethod, setActivePaymentMethod] = useState('razorpay'); // razorpay | cod
   const [upiId, setUpiId] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
+
+  const handleUpiPaymentSubmit = async () => {
+    if (upiId.length !== 12) {
+      alert('Please enter a valid 12-digit UTR/Ref number.');
+      return;
+    }
+    setIsProcessing(true);
+    setTimeout(async () => {
+      setIsProcessing(false);
+      const order = buildOrderObject({
+        transactionNo: upiId,
+        referenceNo: upiId
+      });
+      order.paymentMethod = 'UPI';
+      
+      try {
+        await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(order)
+        });
+      } catch (err) {
+        console.error('Failed to save UPI order:', err);
+      }
+
+      setCreatedOrder(order);
+      setPaymentStep('success');
+    }, 2000);
+  };
+
+  const handleCodPaymentSubmit = async () => {
+    setIsProcessing(true);
+    setTimeout(async () => {
+      setIsProcessing(false);
+      const codTx = 'COD-' + Date.now().toString().slice(-6);
+      const order = buildOrderObject({
+        transactionNo: codTx,
+        referenceNo: codTx
+      });
+      order.paymentMethod = 'COD';
+      
+      try {
+        await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(order)
+        });
+      } catch (err) {
+        console.error('Failed to save COD order:', err);
+      }
+
+      setCreatedOrder(order);
+      setPaymentStep('success');
+    }, 1500);
+  };
+
+  const refreshOrderStatus = async () => {
+    if (!createdOrder) return;
+    try {
+      const res = await fetch('/api/orders');
+      const orders = await res.json();
+      const updated = orders.find(o => o.orderId === createdOrder.orderId);
+      if (updated) {
+        setCreatedOrder(updated);
+      }
+    } catch (err) {
+      console.error('Error refreshing order status:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (paymentStep === 'success' && createdOrder) {
+      const interval = setInterval(refreshOrderStatus, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [paymentStep, createdOrder]);
 
   // Coupon States
   const [couponCode, setCouponCode] = useState('');
@@ -68,8 +144,11 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
       alert('Your cart is empty.');
       return;
     }
-    // Directly trigger Razorpay — no intermediate custom modal
-    triggerMockPayment();
+    if (activePaymentMethod === 'cod') {
+      handleCodPaymentSubmit();
+    } else {
+      triggerMockPayment();
+    }
   };
 
   // Helper: build a complete order object from form + cart data
@@ -98,7 +177,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
     couponCode: appliedCoupon ? appliedCoupon.code : '',
     total,
     status: 'Pending',
-    paymentMethod: activePaymentMethod === 'upi' ? 'UPI' : activePaymentMethod === 'card' ? 'Card' : 'Netbanking'
+    paymentMethod: activePaymentMethod === 'razorpay' ? 'Online (Razorpay)' : 'COD'
   });
 
   // Simulate local mock payment (fallback when no Razorpay credentials)
@@ -274,13 +353,13 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
   if (paymentStep === 'success' && createdOrder) {
     const itemsText = createdOrder.items.map(item => `- ${item.name} (${item.weight}) x${item.quantity}`).join('\n');
     const discountText = createdOrder.discount > 0 ? `\nDiscount: -₹${createdOrder.discount} (${createdOrder.couponCode})` : '';
-    const msgText = `New Order Placed on Thulasia Foods!\n------------------------------------\nOrder ID: ${createdOrder.orderId}\nCustomer: ${createdOrder.customerName}\nPhone: ${createdOrder.phone}\nAddress: ${createdOrder.address}\nItems:\n${itemsText}\n------------------------------------${discountText}\nTotal Paid: ₹${createdOrder.total}.00\nPayment: Razorpay (${createdOrder.paymentMethod})`;
+    const msgText = `New Order Placed on Thulasia Foods!\n------------------------------------\nOrder ID: ${createdOrder.orderId}\nCustomer: ${createdOrder.customerName}\nPhone: ${createdOrder.phone}\nAddress: ${createdOrder.address}\nItems:\n${itemsText}\n------------------------------------${discountText}\nTotal Paid: ₹${createdOrder.total}.00\nPayment: ${createdOrder.paymentMethod}`;
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${CONFIG.sellerPhone.replace(/[^0-9+]/g, '')}&text=${encodeURIComponent(msgText)}`;
     const smsUrl = `sms:${CONFIG.sellerPhone.replace(/[^0-9+]/g, '')}?body=${encodeURIComponent(msgText)}`;
 
     return (
-      <div className="container animate-fade-in" style={{ padding: '60px 0', maxWidth: '800px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+      <div className="container animate-fade-in" style={{ padding: '40px 16px 60px', maxWidth: '800px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             backgroundColor: 'rgba(17, 61, 38, 0.1)',
             color: 'var(--primary)',
@@ -294,8 +373,88 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
           }}>
             <CheckCircle size={48} />
           </div>
-          <h2 style={{ fontSize: '32px', fontWeight: 800 }}>Payment Successful!</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Thank you for shopping at Thulasia Foods. Your order is registered.</p>
+          <h2 style={{ fontSize: '28px', fontWeight: 800 }}>Order Placed Successfully!</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Thank you for shopping at Thulasia Foods. Your order is registered.</p>
+        </div>
+
+        {/* Order Sourcing & Tracking Stepper */}
+        <div style={{ marginBottom: '40px' }} className="no-print animate-fade-in">
+          <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--primary-dark)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            📦 Live Order Sourcing Status
+          </h4>
+          
+          <div className="stepper-container">
+            {/* Horizontal Line Connector (Desktop) */}
+            <div className="stepper-line-horizontal" />
+            <div className="stepper-line-horizontal-progress" style={{ 
+              width: createdOrder.status === 'Delivered' 
+                ? 'calc(100% - 120px)' 
+                : createdOrder.status === 'Shipped' 
+                  ? '66%' 
+                  : '33%' 
+            }} />
+
+            {/* Vertical Line Connector (Mobile) */}
+            <div className="stepper-line-vertical" />
+            <div className="stepper-line-vertical-progress" style={{ 
+              height: createdOrder.status === 'Delivered' 
+                ? 'calc(100% - 48px)' 
+                : createdOrder.status === 'Shipped' 
+                  ? '66%' 
+                  : '33%' 
+            }} />
+
+            {/* Step 1: Order Placed */}
+            <div className="step-item completed">
+              <div className="step-icon-wrapper">✓</div>
+              <div className="step-info">
+                <div className="step-title">Order Placed</div>
+                <div className="step-desc">Received at unit</div>
+              </div>
+            </div>
+
+            {/* Step 2: Payment Verified */}
+            <div className="step-item completed">
+              <div className="step-icon-wrapper">✓</div>
+              <div className="step-info">
+                <div className="step-title">Confirmed</div>
+                <div className="step-desc">Paid via {createdOrder.paymentMethod}</div>
+              </div>
+            </div>
+
+            {/* Step 3: Roasting Spices */}
+            <div className={`step-item ${createdOrder.status === 'Pending' ? 'active' : 'completed'}`}>
+              <div className="step-icon-wrapper">
+                {createdOrder.status === 'Pending' ? '3' : '✓'}
+              </div>
+              <div className="step-info">
+                <div className="step-title">Pan-Roasting</div>
+                <div className="step-desc">Pan-roasting in Erode</div>
+              </div>
+            </div>
+
+            {/* Step 4: Dispatched */}
+            <div className={`step-item ${createdOrder.status === 'Shipped' ? 'active' : createdOrder.status === 'Delivered' ? 'completed' : ''}`}>
+              <div className="step-icon-wrapper">
+                {createdOrder.status === 'Delivered' ? '✓' : '4'}
+              </div>
+              <div className="step-info">
+                <div className="step-title">Dispatched</div>
+                <div className="step-desc">{createdOrder.status === 'Shipped' ? 'In transit via courier' : 'Handed to courier'}</div>
+              </div>
+            </div>
+
+            {/* Step 5: Delivered */}
+            <div className={`step-item ${createdOrder.status === 'Delivered' ? 'completed' : ''}`}>
+              <div className="step-icon-wrapper">
+                {createdOrder.status === 'Delivered' ? '✓' : '5'}
+              </div>
+              <div className="step-info">
+                <div className="step-title">Delivered</div>
+                <div className="step-desc">Spices delivered!</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* FSSAI Styled Receipt Panel */}
@@ -303,7 +462,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
           backgroundColor: '#ffffff',
           border: '1.5px solid var(--primary)',
           borderRadius: '16px',
-          padding: '40px',
+          padding: 'clamp(20px, 5vw, 40px)',
           boxShadow: 'var(--shadow-md)',
           fontFamily: "'Inter', sans-serif",
           color: '#111'
@@ -358,9 +517,9 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
           {/* Fields matching official download.pdf layout */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '16px 40px',
-            fontSize: '14px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '16px 32px',
+            fontSize: '13px',
             marginBottom: '30px',
             lineHeight: 1.5
           }}>
@@ -393,7 +552,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
             </div>
             <div>
               <span style={{ display: 'block', color: '#555', fontWeight: 600 }}>Mode of Payment:</span>
-              <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>Razorpay ({createdOrder.paymentMethod})</span>
+              <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>{createdOrder.paymentMethod}</span>
             </div>
 
             <div>
@@ -406,11 +565,13 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
             </div>
           </div>
 
-          {/* Items Summary Table */}
+          {/* Items Summary Table - scrollable on mobile */}
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '0 -8px', padding: '0 8px' }}>
           <table style={{
             width: '100%',
+            minWidth: '480px',
             borderCollapse: 'collapse',
-            fontSize: '13px',
+            fontSize: '12px',
             marginBottom: '30px'
           }}>
             <thead>
@@ -461,6 +622,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
               </tr>
             </tbody>
           </table>
+          </div>
 
           <div style={{
             borderTop: '1px solid #ddd',
@@ -526,8 +688,9 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: '16px',
-          marginTop: '32px'
+          gap: '12px',
+          marginTop: '32px',
+          flexWrap: 'wrap'
         }} className="no-print">
           <button onClick={() => {
             onSuccess(createdOrder);
@@ -550,8 +713,9 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
     );
   }
 
+
   return (
-    <section style={{ padding: '60px 0 100px' }} className="animate-fade-in">
+    <section style={{ padding: '40px 0 100px' }} className="animate-fade-in">
       <div className="container">
         
         {/* Back navigation */}
@@ -575,20 +739,18 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
 
         <h2 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '40px' }}>Secure Checkout</h2>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
+        <div className="responsive-grid-2" style={{
           gap: '40px',
           alignItems: 'flex-start'
         }}>
           {/* Left: Shipping Form */}
-          <div className="card" style={{ padding: '40px' }}>
+          <div className="card" style={{ padding: '40px 24px' }}>
             <h3 style={{ fontSize: '20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <MapPin size={20} /> Shipping Details
             </h3>
             
             <form onSubmit={handleFormSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div className="responsive-grid-2" style={{ gap: '20px' }}>
                 <div className="form-group">
                   <label className="form-label">Full Name</label>
                   <input 
@@ -641,7 +803,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: '16px' }}>
+              <div className="responsive-grid-3" style={{ gap: '16px' }}>
                 <div className="form-group">
                   <label className="form-label">City</label>
                   <input 
@@ -671,22 +833,106 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                   <input 
                     className="form-control"
                     type="text" 
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
                     name="pincode" 
                     value={formData.pincode} 
                     onChange={handleInputChange} 
                     required 
                     placeholder="638XXX" 
+                    style={{ fontSize: '16px' }}
                   />
                 </div>
               </div>
 
-              <button 
-                type="submit" 
-                className="btn btn-primary" 
+              {/* Payment Method Selector */}
+              <div style={{ marginTop: '20px', marginBottom: '4px' }}>
+                <label className="form-label" style={{ marginBottom: '10px', display: 'block' }}>Payment Method</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+                  {/* Razorpay option */}
+                  <div
+                    onClick={() => setActivePaymentMethod('razorpay')}
+                    style={{
+                      border: activePaymentMethod === 'razorpay' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                      backgroundColor: activePaymentMethod === 'razorpay' ? 'rgba(17,61,38,0.04)' : 'var(--bg-white)',
+                      padding: '14px 16px',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      transition: 'var(--transition)'
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      checked={activePaymentMethod === 'razorpay'}
+                      onChange={() => setActivePaymentMethod('razorpay')}
+                      style={{ accentColor: 'var(--primary)', width: '18px', height: '18px', flexShrink: 0 }}
+                    />
+                    <div>
+                      <strong style={{ fontSize: '14px', color: 'var(--primary-dark)', display: 'block' }}>💳 Pay Online (Razorpay)</strong>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>UPI, Cards, Net Banking, Wallets — 100% Secure</span>
+                    </div>
+                  </div>
+
+                  {/* COD option */}
+                  <div
+                    onClick={() => setActivePaymentMethod('cod')}
+                    style={{
+                      border: activePaymentMethod === 'cod' ? '2px solid var(--accent)' : '1px solid var(--border-color)',
+                      backgroundColor: activePaymentMethod === 'cod' ? 'rgba(180,133,72,0.05)' : 'var(--bg-white)',
+                      padding: '14px 16px',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      transition: 'var(--transition)'
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      checked={activePaymentMethod === 'cod'}
+                      onChange={() => setActivePaymentMethod('cod')}
+                      style={{ accentColor: 'var(--accent)', width: '18px', height: '18px', flexShrink: 0 }}
+                    />
+                    <div>
+                      <strong style={{ fontSize: '14px', color: 'var(--accent-dark)', display: 'block' }}>📦 Cash on Delivery (COD)</strong>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Pay cash or UPI at doorstep upon delivery</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                {activePaymentMethod === 'cod' && (
+                  <div style={{
+                    marginTop: '10px',
+                    padding: '10px 14px',
+                    backgroundColor: 'rgba(180,133,72,0.07)',
+                    border: '1px solid rgba(180,133,72,0.25)',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    color: 'var(--accent-dark)'
+                  }}>
+                    ℹ️ Our team will call you to confirm before dispatch.
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className={activePaymentMethod === 'cod' ? 'btn btn-accent' : 'btn btn-primary'}
                 style={{ width: '100%', padding: '14px', fontSize: '16px', marginTop: '16px' }}
               >
-                Proceed to Payment (₹{total})
-                <ArrowRight size={18} />
+                {activePaymentMethod === 'cod'
+                  ? `Place COD Order (₹${total})`
+                  : `Pay ₹${total} with Razorpay →`
+                }
               </button>
             </form>
           </div>

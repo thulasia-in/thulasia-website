@@ -183,9 +183,9 @@ export default function BuyerApp() {
             {/* Flagship Product */}
             <section style={{ padding: '80px 0' }}>
               <div className="container">
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
-                  <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ width: '360px', height: '460px', backgroundColor: 'var(--primary)', borderRadius: '24px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', color: 'white', border: '6px solid var(--accent)', padding: '30px', backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(255,255,255,0.03) 0%, transparent 90%)' }} className="animate-float">
+                <div className="responsive-grid-2" style={{ gap: '40px', alignItems: 'center' }}>
+                  <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <div style={{ width: '100%', maxWidth: '360px', height: '460px', backgroundColor: 'var(--primary)', borderRadius: '24px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', color: 'white', border: '6px solid var(--accent)', padding: '30px', backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(255,255,255,0.03) 0%, transparent 90%)' }} className="animate-float">
                       <div style={{ position: 'absolute', top: 10, right: 10, opacity: 0.1 }}><Leaf size={150} /></div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <div style={{ border: '2px solid var(--accent)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', color: 'var(--accent)', fontWeight: 800 }}>100% NATURAL</div>
@@ -207,11 +207,11 @@ export default function BuyerApp() {
                   </div>
                   <div>
                     <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '2px' }}>Flagship Product</span>
-                    <h2 style={{ fontSize: '42px', fontWeight: 800, margin: '12px 0 20px', lineHeight: 1.15 }}>Traditional Garlic Podi</h2>
+                    <h2 style={{ fontSize: 'clamp(24px, 4vw, 42px)', fontWeight: 800, margin: '12px 0 20px', lineHeight: 1.2 }}>Traditional Garlic Podi</h2>
                     <p style={{ color: 'var(--text-muted)', fontSize: '17px', marginBottom: '24px' }}>
                       Our signature Poondu Podi is prepared with premium garlic cloves, selectively chosen red chillies, and roasted dals. Mix with hot ghee over steaming rice or idlis.
                     </p>
-                    <div style={{ display: 'flex', gap: '30px', marginBottom: '32px', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '20px 0' }}>
+                    <div style={{ display: 'flex', gap: 'clamp(12px, 3vw, 30px)', marginBottom: '28px', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '16px 0', flexWrap: 'wrap' }}>
                       {[['100%', 'Pure Vegetarian'], ['Zero', 'Artificial Additives'], ['Erode', 'Homemade Quality']].map(([val, label]) => (
                         <div key={label}>
                           <span style={{ display: 'block', fontSize: '24px', fontWeight: 800, color: 'var(--primary)' }}>{val}</span>
@@ -219,7 +219,7 @@ export default function BuyerApp() {
                         </div>
                       ))}
                     </div>
-                    <div style={{ display: 'flex', gap: '16px' }}>
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                       <button onClick={() => addToCart(products.find(p => p.id === 1) || products[0])} className="btn btn-primary" style={{ padding: '16px 36px', fontSize: '16px' }}>
                         Add to Cart
                       </button>
@@ -265,8 +265,8 @@ export default function BuyerApp() {
                   Have questions about bulk orders, customization, or shipping? Reach out directly or visit our manufacturing unit.
                 </p>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
-                <div className="card" style={{ padding: '48px' }}>
+              <div className="responsive-grid-2" style={{ gap: '40px' }}>
+                <div className="card" style={{ padding: '40px 24px' }}>
                   <h3 style={{ fontSize: '24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}><Leaf size={24} /> Manufacturing Details</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                     {[
@@ -316,7 +316,7 @@ export default function BuyerApp() {
       {/* ── FOOTER ── */}
       <footer style={{ backgroundColor: 'var(--primary-dark)', color: 'rgba(255,255,255,0.7)', padding: '60px 0 30px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.5fr', gap: '40px', marginBottom: '40px' }}>
+          <div className="responsive-grid-4" style={{ gap: '30px', marginBottom: '40px' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                 <img src="/logo.png" alt="Thulasia Foods" style={{ height: '36px', objectFit: 'contain', backgroundColor: 'white', padding: '4px 8px', borderRadius: '6px' }} />
@@ -385,7 +385,7 @@ export default function BuyerApp() {
                 </div>
                 <button onClick={() => setSelectedProduct(null)} style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer', color: 'var(--text-muted)' }}>×</button>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '30px', marginBottom: '24px' }}>
+              <div className="modal-content-grid" style={{ gap: '24px', marginBottom: '24px' }}>
                 <div>
                   <h4 style={{ fontSize: '14px', textTransform: 'uppercase', color: 'var(--accent)', letterSpacing: '1px', marginBottom: '8px' }}>Description</h4>
                   <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '16px' }}>{selectedProduct.description}</p>
