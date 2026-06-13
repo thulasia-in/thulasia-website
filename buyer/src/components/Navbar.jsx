@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, BookOpen, Store as StoreIcon, Phone, Menu, X } from 'lucide-react';
+import { ShoppingCart, BookOpen, Store as StoreIcon, Phone, Menu, X, Truck } from 'lucide-react';
 
 export default function Navbar({ currentView, setCurrentView, cartCount, setIsCartOpen }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +8,7 @@ export default function Navbar({ currentView, setCurrentView, cartCount, setIsCa
     { view: 'home', label: 'Home', icon: null },
     { view: 'store', label: 'Shop Podis', icon: StoreIcon },
     { view: 'recipes', label: 'Recipes', icon: BookOpen },
+    { view: 'track', label: 'Track Order', icon: Truck },
     { view: 'contact', label: 'Contact', icon: Phone },
   ];
 

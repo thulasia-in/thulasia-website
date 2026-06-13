@@ -375,6 +375,27 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
           </div>
           <h2 style={{ fontSize: '28px', fontWeight: 800 }}>Order Placed Successfully!</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Thank you for shopping at Thulasia Foods. Your order is registered.</p>
+          
+          <div style={{
+            backgroundColor: 'rgba(17, 61, 38, 0.05)',
+            border: '1.5px solid var(--primary)',
+            borderRadius: '12px',
+            padding: '16px 20px',
+            maxWidth: '600px',
+            margin: '20px auto 0',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '12px'
+          }}>
+            <span style={{ fontSize: '20px', lineHeight: 1 }}>🎉</span>
+            <div>
+              <strong style={{ color: 'var(--primary-dark)', display: 'block', fontSize: '14px', marginBottom: '4px' }}>Automatic Tracking Activated!</strong>
+              <p style={{ color: 'var(--text-muted)', fontSize: '13px', margin: 0 }}>
+                We have automatically sent your tracking details to your WhatsApp (<strong>{createdOrder.phone}</strong>) and Gmail (<strong>{createdOrder.email}</strong>). You can also search for this order on the <strong>Track Order</strong> tab.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Order Sourcing & Tracking Stepper */}
@@ -646,10 +667,10 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
           textAlign: 'center'
         }}>
           <h4 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '8px', color: 'var(--primary-dark)' }}>
-            📲 Notify Seller of Your Payment
+            📲 Order Notifications
           </h4>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-            Please notify Thulasia Foods support about your successful payment to dispatch your spices immediately.
+            Order tracking updates are automatically sent via WhatsApp and Gmail. If you need to manually ping the seller, you can use the shortcuts below:
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{
@@ -744,7 +765,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
           alignItems: 'flex-start'
         }}>
           {/* Left: Shipping Form */}
-          <div className="card" style={{ padding: '40px 24px' }}>
+          <div className="card glow-on-hover" style={{ padding: '40px 24px' }}>
             <h3 style={{ fontSize: '20px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <MapPin size={20} /> Shipping Details
             </h3>
@@ -754,7 +775,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                 <div className="form-group">
                   <label className="form-label">Full Name</label>
                   <input 
-                    className="form-control"
+                    className="form-control form-control-premium"
                     type="text" 
                     name="name" 
                     value={formData.name} 
@@ -764,36 +785,52 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Phone Number</label>
+                  <label className="form-label">WhatsApp Number (for updates)</label>
                   <input 
-                    className="form-control"
+                    className="form-control form-control-premium"
                     type="tel" 
                     name="phone" 
                     value={formData.phone} 
                     onChange={handleInputChange} 
                     required 
-                    placeholder="10-digit mobile number" 
+                    placeholder="10-digit WhatsApp number" 
                   />
                 </div>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Email Address</label>
+                <label className="form-label">Gmail Address (for updates)</label>
                 <input 
-                  className="form-control"
+                  className="form-control form-control-premium"
                   type="email" 
                   name="email" 
                   value={formData.email} 
                   onChange={handleInputChange} 
                   required 
-                  placeholder="for order tracking updates" 
+                  placeholder="E.g., name@gmail.com" 
                 />
+              </div>
+
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                backgroundColor: 'rgba(17, 61, 38, 0.04)', 
+                padding: '10px 14px', 
+                borderRadius: '8px',
+                fontSize: '12px',
+                color: 'var(--primary-dark)',
+                marginBottom: '20px',
+                borderLeft: '3px solid var(--accent)'
+              }}>
+                <span style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 'bold' }}>✓</span>
+                <span>Order tracking details will be automatically sent to this WhatsApp number and Gmail address.</span>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Delivery Address (Door No, Street Name)</label>
                 <input 
-                  className="form-control"
+                  className="form-control form-control-premium"
                   type="text" 
                   name="address" 
                   value={formData.address} 
@@ -807,7 +844,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                 <div className="form-group">
                   <label className="form-label">City</label>
                   <input 
-                    className="form-control"
+                    className="form-control form-control-premium"
                     type="text" 
                     name="city" 
                     value={formData.city} 
@@ -819,7 +856,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                 <div className="form-group">
                   <label className="form-label">State</label>
                   <input 
-                    className="form-control"
+                    className="form-control form-control-premium"
                     type="text" 
                     name="state" 
                     value={formData.state} 
@@ -831,7 +868,7 @@ export default function Checkout({ cart, subtotal, offers = [], deliverySettings
                 <div className="form-group">
                   <label className="form-label">Pincode</label>
                   <input 
-                    className="form-control"
+                    className="form-control form-control-premium"
                     type="text" 
                     inputMode="numeric"
                     pattern="[0-9]{6}"

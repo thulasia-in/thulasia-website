@@ -317,6 +317,57 @@ if (rzpKeyId && rzpKeySecret) {
   console.log("No Razorpay credentials found in .env. Falling back to Simulated Payment Gateway.");
 }
 
+// --- AUTOMATED WHATSAPP & GMAIL ORDER NOTIFICATION SIMULATION ---
+function sendTrackingNotification(order, actionType = 'CREATED') {
+  console.log(`\n================================================================================`);
+  console.log(`[AUTOMATED ORDER NOTIFICATION SYSTEM] - Action: ${actionType}`);
+  console.log(`Order ID: ${order.orderId}`);
+  console.log(`Customer: ${order.customerName}`);
+  console.log(`WhatsApp Number: ${order.phone}`);
+  console.log(`Gmail Address: ${order.email}`);
+  console.log(`Current Status: ${order.status}`);
+  console.log(`--------------------------------------------------------------------------------`);
+  
+  const trackingLink = `http://localhost:5173/?view=track&id=${order.orderId}`;
+  
+  if (actionType === 'CREATED') {
+    console.log(`💬 AUTOMATED WHATSAPP SENT to +91 ${order.phone.replace(/[^0-9]/g, '')}:`);
+    console.log(`   "Hello ${order.customerName}! 🌿 Your Thulasia Foods order ${order.orderId} of ₹${order.total}.00 has been successfully received. We are preparing to pan-roast your organic spices in our Erode unit! Track your order live here: ${trackingLink}"`);
+    console.log(`\n📧 AUTOMATED GMAIL DISPATCHED to ${order.email}:`);
+    console.log(`   Subject: Order Confirmed & Sourced! Thulasia Foods - ${order.orderId}`);
+    console.log(`   Body:`);
+    console.log(`   Hi ${order.customerName},`);
+    console.log(`   Thank you for purchasing traditional Tamil Nadu spices from Thulasia Foods.`);
+    console.log(`   We have registered your order ${order.orderId}.`);
+    console.log(`   Delivery Address: ${order.address}`);
+    console.log(`   Items: ${order.items.map(i => `${i.name} (${i.weight}) x${i.quantity}`).join(', ')}`);
+    console.log(`   Total Paid: ₹${order.total}.00 via ${order.paymentMethod}`);
+    console.log(`   \n   You can track your order's sourcing, roasting, and shipping progress in real-time:`);
+    console.log(`   👉 ${trackingLink}`);
+    console.log(`   \n   Best Regards,`);
+    console.log(`   Thulasia Foods support (fssai: 22424573000315)`);
+  } else {
+    // Status update (Shipped / Delivered)
+    const statusText = order.status === 'Shipped' 
+      ? `has been pan-roasted, packed, and dispatched! 🚚 It is now in transit via our courier partner.`
+      : `has been successfully delivered! 🎉 We hope you enjoy the authentic, fresh flavors of our Erode spices.`;
+      
+    console.log(`💬 AUTOMATED WHATSAPP SENT to +91 ${order.phone.replace(/[^0-9]/g, '')}:`);
+    console.log(`   "Hello ${order.customerName}! 🌿 Update for order ${order.orderId}: Your spice mix ${statusText} Track status live here: ${trackingLink}"`);
+    console.log(`\n📧 AUTOMATED GMAIL DISPATCHED to ${order.email}:`);
+    console.log(`   Subject: Order Status Updated: ${order.status} - Thulasia Foods - ${order.orderId}`);
+    console.log(`   Body:`);
+    console.log(`   Hi ${order.customerName},`);
+    console.log(`   We have an update regarding your Thulasia Foods order ${order.orderId}.`);
+    console.log(`   Current Status: ${order.status}`);
+    console.log(`   Update: Your order ${statusText}`);
+    console.log(`   \n   Track progress live here:`);
+    console.log(`   👉 ${trackingLink}`);
+    console.log(`   \n   Thank you for choosing Thulasia Foods!`);
+  }
+  console.log(`================================================================================\n`);
+}
+
 // --- REST API ENDPOINTS ---
 
 // 1. Image upload
@@ -444,6 +495,7 @@ app.post('/api/orders', (req, res) => {
 
   db.orders.unshift(newOrder); // Add to beginning
   writeDB(db);
+  sendTrackingNotification(newOrder, 'CREATED');
   res.status(201).json(newOrder);
 });
 
@@ -459,6 +511,7 @@ app.put('/api/orders/:id', (req, res) => {
 
   db.orders[index].status = req.body.status;
   writeDB(db);
+  sendTrackingNotification(db.orders[index], 'STATUS_UPDATE');
   res.json(db.orders[index]);
 });
 

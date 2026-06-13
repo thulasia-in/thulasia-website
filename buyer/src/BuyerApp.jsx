@@ -5,6 +5,7 @@ import Store from './components/Store';
 import CartDrawer from './components/CartDrawer';
 import Checkout from './components/Checkout';
 import Recipes from './components/Recipes';
+import TrackOrder from './components/TrackOrder';
 import { Phone, Mail, MapPin, Award, CheckCircle, ShieldCheck, Heart, Leaf, Instagram, Facebook } from 'lucide-react';
 
 export default function BuyerApp() {
@@ -241,6 +242,9 @@ export default function BuyerApp() {
 
         {/* ── RECIPES ── */}
         {currentView === 'recipes' && <Recipes />}
+
+        {/* ── TRACK ORDER ── */}
+        {currentView === 'track' && <TrackOrder />}
 
         {/* ── CHECKOUT ── */}
         {currentView === 'checkout' && (
